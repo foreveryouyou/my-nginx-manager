@@ -13,8 +13,9 @@ let win
 function createWindow() {
     // 创建浏览器窗口。
     win = new BrowserWindow({
-        width: 800,
-        height: 600
+        width: 700,
+        height: 500,
+        resizable: false
     })
 
     // 然后加载应用的 index.html。
@@ -68,8 +69,6 @@ function initMenu(){
     {
       label: '菜单',
       submenu: [
-        {label: '设置nginx路径',click (){alert('设置nginx路径')}},
-        {type: 'separator'},
         {role: 'quit', label: '退出'},
       ]
     },
@@ -83,7 +82,7 @@ function initMenu(){
         {role: 'zoomin', label: '放大10%'},
         {role: 'zoomout', label: '缩小10%'},
         {type: 'separator'},
-        {role: 'toggledevtools', label: '开发者工具'},
+        {role: 'toggledevtools', label: '开发者工具', accelerator: 'F12'},
         {role: 'togglefullscreen', label: '切换全屏'}
       ]
     },
