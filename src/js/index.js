@@ -63,6 +63,8 @@ new Vue({
                     console.log(stdout);
                     console.log(`stderr: ${stderr}`);
                 });
+            } else {
+                alert('请先设置nginx路径');
             }
         },
         doStop() {
