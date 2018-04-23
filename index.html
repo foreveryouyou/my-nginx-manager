@@ -1,30 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
     <title>nginx 启动脚本</title>
+    <link rel="stylesheet" href="src/lib/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
-    <button onclick="doStart()">启动</button>
-    <button onclick="doStop()">停止</button>
-    <button onclick="doRestart()">重启</button>
-    <button onclick="refresh()">刷新</button>
+    <div class="container-fluid">
 
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    nginx 进程
-                </th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <div class="row" style="margin: 10px auto">
+            <div class="col-md-12">
+                <div class="btn-toolbar" role="toolbar" aria-label="...">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-success" onclick="doStart()">启动</button>
+                        <button type="button" class="btn btn-danger" onclick="doStop()">停止</button>
+                        <button type="button" class="btn btn-info" onclick="doRestart()">重启</button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-info" onclick="refresh()">刷新</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-hover">
+                    <!-- <thead>
+                        <tr>
+                            <th>
+                                PID
+                            </th>
+                            <th>
+                                name
+                            </th>
+                            <th>
+                                Mem
+                            </th>
+                        </tr>
+                    </thead> -->
+                    <thead>
+                        <tr>
+                            <th>当前正在运行的 nginx 进程</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
-    <script src="js/index.js"></script>
+    </div>
+
+    <script src="src/lib/jquery/3.2.1/jquery.min.js"></script>
+    <script src="src/lib/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="src/js/index.js"></script>
 </body>
 
 </html>

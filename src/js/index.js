@@ -28,12 +28,13 @@ function doRestart() {
 function refresh() {
     exec('tasklist|findstr /i "nginx.exe"', (error, stdout, stderr) => {
         if (error) {
-            console.error(`exec error: ${error}`);
+            // console.error(`exec error: ${error}`);
+            renderTable('');
             return;
         }
         renderTable(stdout);
-        console.log(stdout);
-        console.log(`stderr: ${stderr}`);
+        // console.log(stdout);
+        // console.log(`stderr: ${stderr}`);
     });
 }
 
@@ -47,6 +48,7 @@ function renderTable(dataStr) {
     data.forEach(function (item) {
         html += `<tr><td><pre>${item}</pre></td></tr>`;
     });
+    html = html ? html : `<tr><td>当前没有正在运行的 nginx 进程</td></tr>`;
     let tbody = document.querySelector('table>tbody');
     tbody.innerHTML = html;
 }
