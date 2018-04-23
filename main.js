@@ -1,7 +1,7 @@
 const {
     app,
     BrowserWindow,
-    Menu
+    ipcMain
 } = require('electron')
 const path = require('path')
 const url = require('url')
@@ -15,7 +15,7 @@ function createWindow() {
     win = new BrowserWindow({
         width: 700,
         height: 500,
-        resizable: false
+        resizable: false,
     })
 
     // 然后加载应用的 index.html。
@@ -25,7 +25,10 @@ function createWindow() {
         slashes: true
     }))
 
-    initMenu();
+    win.onbeforeunload = (e) => {
+      console.log(666,'close')
+      return true;
+    }
 
     // 打开开发者工具。
     // win.webContents.openDevTools()
@@ -38,6 +41,9 @@ function createWindow() {
         win = null
     })
 }
+
+// 单例
+// app.makeSingleInstance()
 
 // Electron 会在初始化后并准备
 // 创建浏览器窗口时，调用这个函数。
@@ -63,44 +69,3 @@ app.on('activate', () => {
 
 // 在这文件，你可以续写应用剩下主进程代码。
 // 也可以拆分成几个文件，然后用 require 导入。
-
-function initMenu(){
-  const template = [
-    {
-      label: '菜单',
-      submenu: [
-        {role: 'quit', label: '退出'},
-      ]
-    },
-    {
-      label: '视图',
-      submenu: [
-        {role: 'reload', label: '刷新'},
-        {role: 'forcereload', label: '强制刷新'},
-        {type: 'separator'},
-        {role: 'resetzoom', label: '重置缩放比'},
-        {role: 'zoomin', label: '放大10%'},
-        {role: 'zoomout', label: '缩小10%'},
-        {type: 'separator'},
-        {role: 'toggledevtools', label: '开发者工具', accelerator: 'F12'},
-        {role: 'togglefullscreen', label: '切换全屏'}
-      ]
-    },
-    {
-      label: '窗口',
-      role: 'window',
-      submenu: [
-        {role: 'minimize', label: '最小化'},
-        {role: 'close', label: '关闭'}
-      ]
-    },
-    {
-      label: '关于',
-      role: 'help',
-      click() {  }
-    }
-  ]
-
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
-}

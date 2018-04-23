@@ -1,4 +1,7 @@
 const {
+    app, Menu, Tray, ipcRenderer
+} = require('electron').remote
+const {
     exec,
     execFile
 } = require('child_process')
@@ -11,16 +14,14 @@ const path = require('path')
 new Vue({
     el: '#vm',
     data: {
-        confFile: 'conf/conf.txt', // 配置文件路径
+        confFile: app.getPath('userData') + '\\conf.txt', // 配置文件路径, "C:\users\xxx\AppData\Roaming\appname"
         nginxPath: '', // nginx 文件
         nginxDir: '', // nginx 目录
         nginxFile: '', // nginx 路径
         processArr: [], // 运行中的 nginx 进程
         showLoading: false
     },
-    created() {
-
-    },
+    created() {},
     mounted() {
         this.init();
         let vm = this;
@@ -33,6 +34,7 @@ new Vue({
     methods: {
         init: function () {
             this.getNginxPath();
+            this.initMenu();
         },
         doStart() {
             if (this.processArr.length > 0) {
@@ -45,7 +47,7 @@ new Vue({
                 let n = 0;
                 let timer = setInterval(() => {
                     n++;
-                    if (vm.processArr.length > 0 || n > 15) {
+                    if (vm.processArr.length > 0 || n > 20) {
                         vm.showLoading = false;
                         if (vm.processArr.length == 0) {
                             alert('启动失败,请稍后重试或检查nginx设置是否正确!');
@@ -184,7 +186,58 @@ new Vue({
             if (save) {
                 fs.writeFile(this.confFile, this.nginxPath, 'utf8', function (err) {});
             }
-        }
+        },
+        initMenu(){
+            let vm = this;
+            const template = [
+              {
+                label: '菜单',
+                submenu: [
+                  {role: 'quit', label: '退出'},
+                ]
+              },
+              {
+                label: '视图',
+                submenu: [
+                  {role: 'reload', label: '刷新'},
+                  {role: 'forcereload', label: '强制刷新'},
+                  {type: 'separator'},
+                  {role: 'resetzoom', label: '重置缩放比'},
+                  {role: 'zoomin', label: '放大10%'},
+                  {role: 'zoomout', label: '缩小10%'},
+                  {type: 'separator'},
+                  {role: 'toggledevtools', label: '开发者工具', accelerator: 'F12'},
+                  {role: 'togglefullscreen', label: '切换全屏'}
+                ]
+              },
+              {
+                label: '窗口',
+                role: 'window',
+                submenu: [
+                  {role: 'minimize', label: '最小化'},
+                  {role: 'close', label: '关闭'}
+                ]
+              },
+              {
+                label: '关于',
+                role: 'help',
+                click(item, focusWindow) { alert('当前版本：' + app.getVersion()) }
+              }
+            ]
+          
+            const menu = Menu.buildFromTemplate(template)
+            Menu.setApplicationMenu(menu)
+          
+            // 初始化托盘
+            tray = new Tray(path.join(__dirname, 'src/nginx.png'))
+            const contextMenu = Menu.buildFromTemplate([
+              { label: '启动', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStart() } },
+              { label: '停止', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStop() } },
+              { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { app.quit() } },
+            ])
+            tray.setToolTip('This is my application.')
+            tray.setContextMenu(contextMenu)
+          }
     }
 });
 
