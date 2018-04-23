@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "packageWin": "electron-packager . myNginx --platform=win32 --arch=x64 --out=./dist --electronVersion=1.8.4 --asar --app-version=0.1.0"
+    "packageWin": "electron-packager . my-nginx --platform=win32 --arch=x64 --icon=./src/favicon.ico --out=./dist --electronVersion=1.8.4 --asar --app-version=0.1.0 --overwrite"
   },
   "author": "forever_youyou@foxmail.com",
   "license": "ISC",
