@@ -219,9 +219,11 @@ new Vue({
                 ]
               },
               {
-                label: '关于',
+                label: '帮助',
                 role: 'help',
-                click(item, focusWindow) { alert('当前版本：' + app.getVersion()) }
+                submenu: [
+                    { label: '关于', click(item, focusWindow) { alert('当前版本：' + app.getVersion()) } }
+                ]
               }
             ]
           
@@ -229,13 +231,13 @@ new Vue({
             Menu.setApplicationMenu(menu)
           
             // 初始化托盘
-            tray = new Tray(path.join(__dirname, 'src/nginx.png'))
+            tray = new Tray(path.join(__dirname, 'src/favicon.ico'))
             const contextMenu = Menu.buildFromTemplate([
               { label: '启动', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStart() } },
               { label: '停止', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStop() } },
               { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { app.quit() } },
             ])
-            tray.setToolTip('This is my application.')
+            tray.setToolTip('nginx 启动脚本\n双击显示主界面\n右击显示快捷菜单')
             tray.setContextMenu(contextMenu)
           }
     }
