@@ -106,7 +106,7 @@ new Vue({
         },
         refresh() {
             let vm = this;
-            exec('tasklist|findstr /i "nginx.exe"', (error, stdout, stderr) => {
+            exec('tasklist|findstr /i "^nginx.exe"', (error, stdout, stderr) => {
                 if (error) {
                     // console.error(`exec error: ${error}`);
                     vm.renderTable('');
