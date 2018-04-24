@@ -1,13 +1,13 @@
 const {
-    app, Menu, Tray, ipcRenderer
+    app, Menu, Tray, dialog
 } = require('electron').remote
+const {
+    ipcRenderer
+} = require('electron')
 const {
     exec,
     execFile
 } = require('child_process')
-const {
-    dialog
-} = require('electron').remote
 const fs = require('fs');
 const path = require('path')
 
@@ -32,7 +32,7 @@ new Vue({
         }, 5000);
     },
     methods: {
-        init: function () {
+        init() {
             this.getNginxPath();
             this.initMenu();
         },
@@ -75,18 +75,6 @@ new Vue({
                 return;
             }
             let vm = this;
-            // execFile(this.nginxFile, ['-s','stop'], {
-            //     cwd: this.nginxDir
-            // }, (error, stdout, stderr) => {
-            //     if (error) {
-            //         console.error(`exec error: ${error}`);
-            //         return;
-            //     }
-            //     console.log(stdout);
-            //     console.log(`stderr: ${stderr}`);
-            // });
-            // return;
-            // 'taskkill /F /IM nginx.exe > nul'
             exec(`taskkill /F /IM ${this.nginxFile} > nul`, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
@@ -187,13 +175,16 @@ new Vue({
                 fs.writeFile(this.confFile, this.nginxPath, 'utf8', function (err) {});
             }
         },
+        forceClose() {
+            ipcRenderer.send('force-close', 'close');
+        },
         initMenu(){
             let vm = this;
             const template = [
               {
                 label: '菜单',
                 submenu: [
-                  {role: 'quit', label: '退出'},
+                  { label: '退出', click() { vm.forceClose() } },
                 ]
               },
               {
@@ -235,8 +226,11 @@ new Vue({
             const contextMenu = Menu.buildFromTemplate([
               { label: '启动', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStart() } },
               { label: '停止', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStop() } },
-              { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { app.quit() } },
+              { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { vm.forceClose() } },
             ])
+            tray.on('double-click', () => {
+                ipcRenderer.send('tray-on-double-click', 'click')
+            })
             tray.setToolTip('nginx 启动脚本\n双击显示主界面\n右击显示快捷菜单')
             tray.setContextMenu(contextMenu)
           }
