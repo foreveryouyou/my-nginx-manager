@@ -196,9 +196,9 @@ new Vue({
                   {role: 'resetzoom', label: '重置缩放比'},
                   {role: 'zoomin', label: '放大10%'},
                   {role: 'zoomout', label: '缩小10%'},
-                  {type: 'separator'},
-                  {role: 'toggledevtools', label: '开发者工具', accelerator: 'F12'},
-                  {role: 'togglefullscreen', label: '切换全屏'}
+                //   {type: 'separator'},
+                //   {role: 'toggledevtools', label: '开发者工具', accelerator: 'F12'},
+                //   {role: 'togglefullscreen', label: '切换全屏'}
                 ]
               },
               {
@@ -221,19 +221,23 @@ new Vue({
             const menu = Menu.buildFromTemplate(template)
             Menu.setApplicationMenu(menu)
           
+            this.updateTrayMenu();
+        },
+        updateTrayMenu(){
+            const vm = this;
             // 初始化托盘
             tray = new Tray(path.join(__dirname, 'src/favicon.ico'))
             const contextMenu = Menu.buildFromTemplate([
-              { label: '启动', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStart() } },
-              { label: '停止', type: 'normal', click: (menuItem, browserWindow, event) => { vm.doStop() } },
-              { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { vm.forceClose() } },
+                { label: '启动', type: 'radio', click: (menuItem, browserWindow, event) => { vm.doStart() }},
+                { label: '停止', type: 'radio', click: (menuItem, browserWindow, event) => { vm.doStop() }, checked: true },
+                { label: '退出', type: 'normal', click: (menuItem, browserWindow, event) => { vm.forceClose() } },
             ])
             tray.on('double-click', () => {
                 ipcRenderer.send('tray-on-double-click', 'click')
             })
             tray.setToolTip('nginx 启动脚本\n双击显示主界面\n右击显示快捷菜单')
             tray.setContextMenu(contextMenu)
-          }
+        }
     }
 });
 
